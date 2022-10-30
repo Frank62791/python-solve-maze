@@ -18,7 +18,7 @@ env.close()
 
 '''    solution 1:
   obs,random_position = env.random_position_reset()         
-        optimal_path = DPSolution(env,random_position).find_optimal_path()
+        optimal_path = DPSolution(env,random_position).final_path
         while True:                                                 
             
             for action in optimal_path:                         

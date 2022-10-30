@@ -10,6 +10,7 @@ class DPSolution():
         self.env = env
         self.current_space = [(current_space[0]/100, current_space[1]/100)]
         self.target_path = []
+        self.final_path = []
         self.format_space()
         self.prevent_back_loop()
         self.find_optimal_path()
@@ -49,7 +50,8 @@ class DPSolution():
         left = (self.current_space[-1][0]-1, self.current_space[-1][1])
 
         if self.current_space[-1] == (9, 9):
-            return optimal_path
+            self.final_path = optimal_path
+            return 
         elif down in self.target_path and self.next_down:
             optimal_path.append(0)
             self.current_space.append(down)
