@@ -250,7 +250,7 @@ class MazeChallenger(Env):
         # Draw elements on the canvas
         self.draw_elements_on_canvas()
         # If out, end the episode.
-        if self.reward_return <= -30:
+        if self.reward_return <= -20:
             done = True
             playsound('src/lose.mp3')
 

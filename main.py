@@ -1,5 +1,4 @@
 import time
-import matplotlib.pyplot as plt
 import evn.maze_gym as maze_gym
 from solutions.dp_solution import DPSolution
 from solutions.planning import PlanningSolution

@@ -29,7 +29,8 @@ class PlanningSolution():
             return True
 
         if self.is_valid(x, y):
-            sol[x][y] = 1
+            if (x, y) != (self.x, self.y):
+                sol[x][y] = 1
 
             if directions[0] and self.find_paths(x, y+1, sol, [True, False, True, True]) == True:
                 return True
@@ -60,8 +61,7 @@ class PlanningSolution():
             logger.info("No path found")
             return False
 
-        for x in range(10):
-            for y in range(10):
+        while True:
                 if self.is_valid(self.x, self.y+1) and self.possible_path[self.x][self.y+1] == 1:
                     self.actions.append(2)
                     self.possible_path[self.x][self.y+1] = 0
