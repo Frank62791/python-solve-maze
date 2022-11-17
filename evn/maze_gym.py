@@ -23,12 +23,19 @@ class MazeChallenger(Env):
                      (400, 100), (500, 100), (600, 100), (700,
                                                           100), (800, 100), (800, 200), (400, 300), (400, 200), (900, 900)
                      ]
+        self.check_path = [(0, 100), (0, 200), (0, 300), (0, 400), (0, 500), (0, 600), (0, 700),
+                           (200, 100), (200, 200), (200, 700), (200, 800), (300, 800), (400, 800), (500, 800), (
+                               100, 200), (100, 700), (500, 700), (500, 600),  (500, 500), (600, 500), (700, 500), (800, 500),
+                           (900, 800), (900, 700), (900, 600), (900, 500), (900,
+                                                                            400), (900, 300), (900, 200), (300, 100),
+                           (400, 100), (500, 100), (600, 100), (700, 100), (800, 100), (800, 200), (900, 900)]
 
         # Define a 2-D observation space
         self.observation_shape = (1000, 1000, 3)
         self.observation_space = spaces.Box(low=np.zeros(self.observation_shape),
                                             high=np.ones(
                                                 self.observation_shape),
+                                            shape=self.observation_shape,
                                             dtype=np.float16)
 
         # Define an action space ranging from 0 to 3
@@ -48,6 +55,36 @@ class MazeChallenger(Env):
         self.x_min = 0
         self.y_max = self.observation_shape[0]
         self.x_max = self.observation_shape[1]
+
+        self.dynamic_maze()
+        self.states_in_maze()
+        self.count = 0
+
+    def states_in_maze(self):
+        self.states = {}
+        state = 0
+        for position in self.path:
+            self.states.update({position: state})
+            state += 1
+
+    def get_states_length(self):
+        return len(self.states)
+
+    def get_current_state(self):
+        return self.states[self.challenger.get_position()]
+
+    def dynamic_maze(self):
+        self.dynamic_path = []
+        for x in self.path:
+            self.dynamic_path.append((int(x[1]/100), int(x[0]/100)))
+        destination_x = 9
+        destination_y = 9
+        self.maze = np.matrix(np.ones(shape=(10, 10)))
+        self.maze *= -1
+        for position in self.dynamic_path:
+            if position in self.repeat_path:
+                self.maze[position] = 0
+        self.maze[destination_x, destination_y] = 100
 
     def draw_elements_on_canvas(self):
         # Init the canvas
@@ -114,13 +151,13 @@ class MazeChallenger(Env):
         self.draw_elements_on_canvas()
 
         # return the observation
-        return self.canvas
+        return self.get_current_state()
 
     def random_position_reset(self):
         position_index = random.randint(0, len(self.path) - 1)
         position = self.path[position_index]
         self.reset(position[0], position[1])
-        return self.canvas, self.current_postion
+        return self.get_current_state(), self.current_postion
 
     def render(self, mode="human"):
         assert mode in [
@@ -148,7 +185,7 @@ class MazeChallenger(Env):
         assert self.action_space.contains(action), "Invalid Action"
 
         reward = 0
-
+        last_position = self.challenger.get_position()
         # apply the action to the challenger  {0: "Down", 1: "Up", 2: "Right", 3: "Left"}
         if action == 0:
 
@@ -157,7 +194,7 @@ class MazeChallenger(Env):
             if self.current_postion == (900, 900):
                 self.challenger.set_position(
                     self.current_postion[0], self.current_postion[1])
-                reward = 10000
+                reward = 3000
                 done = True
                 self.reward_return += reward
                 self.draw_elements_on_canvas()
@@ -165,11 +202,12 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, {}
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -.5
+                reward = -5
                 self.challenger.move(0, 100)
 
             elif self.current_postion in self.path:
-                reward = 1
+                self.count += 10
+                reward = self.count
                 self.challenger.move(0, 100)
                 self.repeat_path.add(self.current_postion)
 
@@ -180,7 +218,7 @@ class MazeChallenger(Env):
             if self.current_postion == (900, 900):
                 self.challenger.set_position(
                     self.current_postion[0], self.current_postion[1])
-                reward = 10000
+                reward = 3000
                 done = True
                 self.reward_return += reward
                 self.draw_elements_on_canvas()
@@ -188,10 +226,11 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, {}
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -.5
+                reward = -5
                 self.challenger.move(0, -100)
             elif self.current_postion in self.path:
-                reward = 1
+                self.count += 10
+                reward = self.count
                 self.challenger.move(0, -100)
                 self.repeat_path.add(self.current_postion)
 
@@ -202,7 +241,7 @@ class MazeChallenger(Env):
             if self.current_postion == (900, 900):
                 self.challenger.set_position(
                     self.current_postion[0], self.current_postion[1])
-                reward = 10000
+                reward = 3000
                 done = True
                 self.reward_return += reward
                 self.draw_elements_on_canvas()
@@ -211,11 +250,12 @@ class MazeChallenger(Env):
                 return self.canvas/100, reward, done, {}
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
 
-                reward = -.5
+                reward = -5
                 self.challenger.move(100, 0)
 
             elif self.current_postion in self.path:
-                reward = 1
+                self.count += 10
+                reward = self.count
                 self.challenger.move(100, 0)
                 self.repeat_path.add(self.current_postion)
 
@@ -226,7 +266,7 @@ class MazeChallenger(Env):
             if self.current_postion == (900, 900):
                 self.challenger.set_position(
                     self.current_postion[0], self.current_postion[1])
-                reward = 10000
+                reward = 3000
                 done = True
                 self.reward_return += reward
                 self.draw_elements_on_canvas()
@@ -234,29 +274,35 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, {}
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -.5
+                reward = -5
                 self.challenger.move(-100, 0)
 
             elif self.current_postion in self.path:
-                reward = 1
+                self.count += 10
+                reward = self.count
                 self.challenger.move(-100, 0)
                 self.repeat_path.add(self.current_postion)
 
         self.current_postion = self.challenger.get_position()
-
+ #       if self.current_postion in self.check_path:
+  #          reward = 20
+#        else:
+ #           reward = -20
+        if last_position == self.current_postion:
+            reward = -10
         # Increment the episodic return
         self.ep_return += 1
 
         # Draw elements on the canvas
         self.draw_elements_on_canvas()
         # If out, end the episode.
-        if self.reward_return <= -20:
+        if self.reward_return <= -3000:
             done = True
             playsound('src/lose.mp3')
 
         self.reward_return += reward
 
-        return self.canvas/100, reward, done, []
+        return self.current_postion, reward, done, self.get_current_state()
 
 
 class Point(object):

@@ -2,6 +2,8 @@ import time
 import evn.maze_gym as maze_gym
 from solutions.dp_solution import DPSolution
 from solutions.planning import PlanningSolution
+from solutions.monte_carlo import MonteCarloSolution
+from solutions.DT0 import DT0
 
 env = maze_gym.MazeChallenger()   # {0: "Down", 1: "Up", 2: "Right", 3: "Left"}
 obs = env.reset()
