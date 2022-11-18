@@ -200,7 +200,7 @@ class MazeChallenger(Env):
                 self.draw_elements_on_canvas()
                 self.render()
                 playsound('src/win.mp3')
-                return self.canvas/100, reward, done, {}
+                return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
                 reward = -5
                 self.challenger.move(0, 100)
@@ -224,7 +224,7 @@ class MazeChallenger(Env):
                 self.draw_elements_on_canvas()
                 self.render()
                 playsound('src/win.mp3')
-                return self.canvas/100, reward, done, {}
+                return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
                 reward = -5
                 self.challenger.move(0, -100)
@@ -247,7 +247,7 @@ class MazeChallenger(Env):
                 self.draw_elements_on_canvas()
                 self.render()
                 playsound('src/win.mp3')
-                return self.canvas/100, reward, done, {}
+                return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
 
                 reward = -5
@@ -272,7 +272,7 @@ class MazeChallenger(Env):
                 self.draw_elements_on_canvas()
                 self.render()
                 playsound('src/win.mp3')
-                return self.canvas/100, reward, done, {}
+                return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
                 reward = -5
                 self.challenger.move(-100, 0)
