@@ -1,5 +1,5 @@
 import time
-import evn.maze_gym as maze_gym
+import env.maze_gym as maze_gym
 from solutions.dp_solution import DPSolution
 from solutions.planning import PlanningSolution
 from solutions.monte_carlo import MonteCarloSolution
@@ -11,9 +11,10 @@ while True:
     action = env.action_space.sample()
     obs, reward, done, info = env.step(action)
     env.render()
+    print(reward, done, info)
     time.sleep(0.2)
     if done == True:
-        break
+       break  
 
 env.close()
 
