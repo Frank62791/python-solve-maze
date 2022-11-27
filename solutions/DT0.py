@@ -10,12 +10,12 @@ class DT0():
     def __init__(self, env: Env, current_space: tuple = (0, 0)):
         self.env = env
         self.state = self.env.reset()
-#        self.env.render()
+        self.env.render()
         self.action_size = self.env.action_space.n
         self.state_size = self.env.get_states_length()
         self.qtable = np.zeros((self.state_size, self.action_size))
         if path.exists("solutions/TrainedResult/Q_learning_DT0.py"):
-                self.play_game()
+                 self.play_game()
         total_episodes = 1000  # Total episodes
         total_test_episodes = 1  # Total test episodes
         max_steps = 99  # Max steps per episode
@@ -52,7 +52,7 @@ class DT0():
 
 # Take the action (a) and observe the outcome state(s') and reward (r)
                 info, reward, done, new_state = self.env.step(action)
- #                       self.env.render()
+                self.env.render()
 
 # Update Q(s,a):= Q(s,a) + lr [R(s,a) + gamma * max Q(s',a') - Q(s,a)]
                 self.qtable[state, action] = self.qtable[state, action] + learning_rate * (
@@ -65,8 +65,7 @@ class DT0():
                 if done == True:
                     break
 # Reduce epsilon (because we need less and less exploration)
-        epsilon = min_epsilon + (max_epsilon - min_epsilon) * \
-            np.exp(-decay_rate*episode)
+                epsilon = min_epsilon + (max_epsilon - min_epsilon) * np.exp(-decay_rate*episode)
 
         self.env.reset()
         rewards = []
@@ -88,7 +87,7 @@ class DT0():
                 action = np.argmax(self.qtable[state, :])
 
                 info, reward, done, new_state = self.env.step(action)
-       #         self.env.render()
+                self.env.render()
 
                 total_rewards += reward
 
