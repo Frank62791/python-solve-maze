@@ -1,32 +1,49 @@
+from itertools import count
+from os import path
+import random
 from gym import Env
 import numpy as np
-
+#from solutions.TrainedResult.SARSA2 import sarsa
 
 class SARSA():
     def __init__(self, env: Env):
         self.env = env
+        
+    #     if path.exists("solutions/TrainedResult/SARSA.txt"):
+    # #        self.play_game()
+    # #        self.Q  = np.array(sarsa)
+    #         pass
+    #     else:
+        self.Q = np.zeros((self.env.get_states_length(), self.env.action_space.n))    
         self.epsilon = 0.9
         self.total_episodes = 10000
         self.max_steps = 100
-        self.alpha = 0.85
-        self.gamma = 0.95
+        self.alpha = 0.7
+        self.gamma = 0.6
         #Initializing the reward
         self.reward=0
-        self.Q = np.zeros((self.env.get_states_length(), self.env.action_space.n))
-        self.train()
 
+        # Exploration parameters
+        self.epsilon = 1.0  # Exploration rate
+        self.max_epsilon = 1.0  # Exploration probability at start
+        self.min_epsilon = 0.01  # Minimum exploration probability
+        self.decay_rate = 0.01  # Exponential decay rate for exploration prob
+        self.train()
         #Function to choose the next action
     def choose_action(self,state):
-        action=0
-        if np.random.uniform(0, 1) < self.epsilon:
-            action = self.env.action_space.sample()
-        else:
+        exp_exp_tradeoff = random.uniform(0, 1)
+# If this number > greater than epsilon --> exploitation (taking the biggest Q value for this state)
+        if exp_exp_tradeoff > self.epsilon:
             action = np.argmax(self.Q[state, :])
+
+# Else doing a random choice --> exploration
+        else:
+            action = self.env.action_space.sample()
         return action
 
     #Function to learn the self.Q-value
     def update(self,state, state2, reward, action, action2):
-        if reward > 0 :                
+               
             predict = self.Q[state, action]
             target = reward + self.gamma * self.Q[state2, action2]
             self.Q[state, action] = self.Q[state, action] + self.alpha * (target - predict)
@@ -41,8 +58,8 @@ class SARSA():
             action1 = self.choose_action(state1)
 
             while t < self.max_steps:
-                #Visualizing the training
-                self.env.render()
+                
+#                self.env.render()
                 
                 #Getting the next state
                 info, reward, done, state2 = self.env.step(action1)
@@ -63,10 +80,25 @@ class SARSA():
                 #If at the end of learning process
                 if done:
                     break
-        
+                self.epsilon = self.min_epsilon + (self.max_epsilon - self.min_epsilon) * np.exp(-self.decay_rate*episode)
 
             #Evaluating the performance
             print ("Performance : ", reward/self.total_episodes)
             
             #Visualizing the Q-matrix
             print(self.Q)
+            f = open("solutions/TrainedResult/SARSA.txt", "w")
+            f.write(str(self.Q))
+            f.close()
+    def play_game(self):
+        from solutions.TrainedResult.SARSA import sarsa
+        self.state = self.env.reset()
+        for x in count():
+            self.env.render()
+            action = np.argmax(sarsa[self.state])
+            print(self.state, action,sarsa[self.state])
+            _ , reward, done, self.state = self.env.step(action)
+            if done:
+                break
+        self.env.close()
+        exit(0)
