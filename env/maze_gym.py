@@ -279,13 +279,16 @@ class MazeChallenger(Env):
                 self.challenger.move(-100, 0)
                 self.repeat_path.add(self.current_postion)
 
-        self.current_postion = self.challenger.get_position()
+
  #       if self.current_postion in self.check_path:
   #          reward = 20
 #        else:
  #           reward = -20
-        if last_position == self.current_postion:
+        if self.current_postion not in self.path:       # outside boundaries 
+            reward = -0.85
+        elif last_position == self.challenger.get_position():
             reward = -0.78
+        self.current_postion = self.challenger.get_position()
         # Increment the episodic return
         self.ep_return += 1
 
