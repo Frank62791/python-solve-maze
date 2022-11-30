@@ -202,7 +202,7 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -0.25
+                reward = -0.35
                 self.challenger.move(0, 100)
 
             elif self.current_postion in self.path:
@@ -225,7 +225,7 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -0.25
+                reward = -0.35
                 self.challenger.move(0, -100)
             elif self.current_postion in self.path:
                 reward = -0.05
@@ -248,7 +248,7 @@ class MazeChallenger(Env):
                 return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
 
-                reward = -0.25
+                reward = -0.35
                 self.challenger.move(100, 0)
 
             elif self.current_postion in self.path:
@@ -271,7 +271,7 @@ class MazeChallenger(Env):
                 playsound('src/win.mp3')
                 return self.canvas/100, reward, done, self.get_current_state()
             if self.current_postion in self.repeat_path and self.current_postion in self.path:
-                reward = -0.25
+                reward = -0.35
                 self.challenger.move(-100, 0)
 
             elif self.current_postion in self.path:
@@ -295,7 +295,7 @@ class MazeChallenger(Env):
         # Draw elements on the canvas
         self.draw_elements_on_canvas()
         # If out, end the episode.
-        if self.reward_return <= -50:
+        if self.reward_return <= -60:
             done = True
             playsound('src/lose.mp3')
 
