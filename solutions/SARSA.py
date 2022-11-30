@@ -9,17 +9,18 @@ class SARSA():
     def __init__(self, env: Env):
         self.env = env
         
-    #     if path.exists("solutions/TrainedResult/SARSA.txt"):
-    # #        self.play_game()
-    # #        self.Q  = np.array(sarsa)
-    #         pass
-    #     else:
+        if path.exists("solutions/TrainedResult/SARSA.py"):
+            self.play_game()
+            self.Q  = np.array(sarsa)
+
+        else:
+            pass
         self.Q = np.zeros((self.env.get_states_length(), self.env.action_space.n))    
         self.epsilon = 0.9
         self.total_episodes = 10000
         self.max_steps = 100
-        self.alpha = 0.7
-        self.gamma = 0.6
+        self.alpha = 0.9
+        self.gamma = 0.8
         #Initializing the reward
         self.reward=0
 
@@ -63,6 +64,9 @@ class SARSA():
                 
                 #Getting the next state
                 info, reward, done, state2 = self.env.step(action1)
+                if reward == 1:
+                    self.alpha *= self.alpha
+                    self.gamma *= self.gamma
 
                 #Choosing the next action
                 action2 = self.choose_action(state2)
