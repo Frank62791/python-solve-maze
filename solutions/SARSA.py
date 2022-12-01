@@ -3,24 +3,23 @@ from os import path
 import random
 from gym import Env
 import numpy as np
-#from solutions.TrainedResult.SARSA2 import sarsa
+from solutions.TrainedResult.reload import qtable
 
 class SARSA():
     def __init__(self, env: Env):
         self.env = env
         
-        if path.exists("solutions/TrainedResult/SARSA.py"):
+        if path.exists("solutions/TrainedResult/reload.py"):
             self.play_game()
-            self.Q  = np.array(sarsa)
+  #          self.Q  = np.array(qtable)
 
         else:
-            pass
-        self.Q = np.zeros((self.env.get_states_length(), self.env.action_space.n))    
+            self.Q = np.zeros((self.env.get_states_length(), self.env.action_space.n))      
         self.epsilon = 0.9
         self.total_episodes = 10000
         self.max_steps = 100
-        self.alpha = 0.9
-        self.gamma = 0.8
+        self.alpha = 0.8
+        self.gamma = 0.7
         #Initializing the reward
         self.reward=0
 
@@ -64,9 +63,9 @@ class SARSA():
                 
                 #Getting the next state
                 info, reward, done, state2 = self.env.step(action1)
-                if reward == 1:
-                    self.alpha *= self.alpha
-                    self.gamma *= self.gamma
+                if reward == 1 and self.gamma > 0.2:
+                    self.alpha -=   0.002
+                    self.gamma -=   0.002
 
                 #Choosing the next action
                 action2 = self.choose_action(state2)

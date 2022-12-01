@@ -6,7 +6,7 @@ from gym import Env
 from os import path
 
 
-class DT0():
+class QLearning():
     def __init__(self, env: Env, current_space: tuple = (0, 0)):
         self.env = env
         self.state = self.env.reset()
