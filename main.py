@@ -21,11 +21,11 @@ while True:
         time.sleep(0.2)
     if done:
         break
-    env.close()           
+env.close()           
 
 
 '''  planning_solution:
-obs,random_position = env.random_position_reset()         
+obs,random_position = env.random_position_reset()                     # env.random_position_reset()  use random position to start
     optimal_path = PlanningSolution(env,random_position).get_final_path()
     while True:                                                 
     
