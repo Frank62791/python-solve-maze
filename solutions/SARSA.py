@@ -3,7 +3,7 @@ from os import path
 import random
 from gym import Env
 import numpy as np
-from solutions.TrainedResult.reload import qtable
+#from solutions.TrainedResult.reload import qtable
 
 class SARSA():
     def __init__(self, env: Env):
