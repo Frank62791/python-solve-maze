@@ -9,7 +9,7 @@ class SARSA():
     def __init__(self, env: Env):
         self.env = env
         
-        if path.exists("solutions/TrainedResult/reload.py"):
+        if path.exists("solutions/TrainedResult/SARSA.py"):
             self.play_game()
   #          self.Q  = np.array(qtable)
 
